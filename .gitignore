@@ -1,0 +1,45 @@
+# ── Python ──────────────────────────────────────────────
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Environment / Secrets ────────────────────────────────
+.env
+*.env
+
+# ── Generated Reports & Data ──────────────────────────────
+reports/
+data/*.csv
+!data/sample_clean.csv
+!data/sample_noisy.csv
+!data/sample_imbalanced.csv
+!data/sample_high_cardinality.csv
+
+# ── Temp / Status Files ──────────────────────────────────
+status_output.txt
+status_result*.txt
+status_utf8.txt
+
+# ── Node / Frontend ──────────────────────────────────────
+AI-EDA Command Center Design/node_modules/
+AI-EDA Command Center Design/.next/
+AI-EDA Command Center Design/dist/
+AI-EDA Command Center Design/.cache/
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ──────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
