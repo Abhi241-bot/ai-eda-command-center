@@ -1,0 +1,12 @@
+/* ── Typography ───────────────────────────────────────────
+ * Space Grotesk  → display / headings (geometric, techy)
+ * Inter          → body / UI text (clean, legible)
+ * JetBrains Mono → data, metrics, code (monospace)
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  --ff-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --ff-display: 'Space Grotesk', 'Inter', sans-serif;
+  --ff-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+}

@@ -59,9 +59,9 @@ export function BenchmarkingTab({ data, scores }: BenchmarkingTabProps) {
   return (
     <div className="space-y-6">
       {!data ? (
-        <div className="p-20 flex flex-col items-center justify-center text-white/20 border border-white/5 rounded-2xl bg-white/5 gap-4">
-          <BarChart3 className="w-16 h-16 opacity-10" />
-          <p>No benchmarking data available. Run analysis in the Data Hub.</p>
+        <div className="glass p-20 flex flex-col items-center justify-center text-white/30 rounded-2xl gap-4">
+          <BarChart3 className="w-16 h-16 text-[var(--electric-violet)]/30 animate-float" />
+          <p className="font-mono text-sm uppercase tracking-wider">No benchmarking data — run analysis in the Data Hub</p>
         </div>
       ) : (
         <>

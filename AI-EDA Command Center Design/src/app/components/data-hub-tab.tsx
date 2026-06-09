@@ -40,7 +40,7 @@ export function DataHubTab({ profile, onUpload, onRun, loading }: DataHubTabProp
         onClick={() => fileInputRef.current?.click()}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--electric-violet)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="w-16 h-16 rounded-full bg-[var(--electric-violet)]/10 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10">
+        <div className="animate-float w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--electric-violet)]/20 to-[var(--cyber-cyan)]/10 border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform relative z-10 shadow-[0_0_30px_rgba(139,92,246,0.25)]">
           <Upload className="w-8 h-8 text-[var(--electric-violet)]" />
         </div>
         <div className="text-center relative z-10">
@@ -59,15 +59,15 @@ export function DataHubTab({ profile, onUpload, onRun, loading }: DataHubTabProp
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1 + index * 0.1 }}
-            className="p-6 rounded-xl backdrop-blur-sm bg-white/5 border border-white/10 hover:border-white/20 transition-all"
+            className="glass glass-hover p-6 rounded-xl"
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-white/5">
+              <div className="p-2 rounded-lg" style={{ backgroundColor: `${stat.color}1a` }}>
                 <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
               </div>
               <span className="text-xs text-white/60 uppercase tracking-wider font-medium">{stat.label}</span>
             </div>
-            <div className="text-2xl font-mono text-white tracking-tight">{stat.value}</div>
+            <div className="text-3xl font-mono text-white tracking-tight" style={{ textShadow: `0 0 24px ${stat.color}40` }}>{stat.value}</div>
           </motion.div>
         ))}
       </div>
@@ -78,7 +78,7 @@ export function DataHubTab({ profile, onUpload, onRun, loading }: DataHubTabProp
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="p-8 rounded-2xl bg-gradient-to-br from-[var(--electric-violet)]/20 to-[var(--neon-green)]/20 border border-[var(--electric-violet)]/30 flex items-center justify-between shadow-2xl"
+          className="gradient-border p-8 rounded-2xl bg-gradient-to-br from-[var(--electric-violet)]/20 to-[var(--cyber-cyan)]/15 flex items-center justify-between shadow-2xl flex-wrap gap-6"
         >
           <div className="max-w-md">
             <h3 className="text-xl text-white mb-2 font-bold uppercase tracking-tight">Run System-Wide Analysis</h3>

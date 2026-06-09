@@ -112,24 +112,37 @@ export default function App() {
       <SidebarNav selectedTools={selectedTools} onToggleTool={toggleTool} />
 
       <main className="flex-1 overflow-y-auto">
-        <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--electric-violet)]/20 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--neon-green)]/10 rounded-full blur-[120px]" />
+        {/* Ambient background: aurora blobs + holographic grid */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="bg-grid absolute inset-0 opacity-70" />
+          <div className="aurora-blob absolute -top-24 right-0 w-[560px] h-[560px] bg-[var(--electric-violet)]/25 rounded-full blur-[130px]" />
+          <div className="aurora-blob-slow absolute bottom-0 left-0 w-[520px] h-[520px] bg-[var(--cyber-cyan)]/15 rounded-full blur-[130px]" />
+          <div className="aurora-blob absolute top-1/3 left-1/2 w-[420px] h-[420px] bg-[var(--neon-green)]/10 rounded-full blur-[140px]" />
         </div>
 
         <div className="relative z-10 p-8">
           <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-8">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
               <div>
-                <h1 className="text-3xl text-white mb-2">Automated EDA Benchmarking & Evaluation</h1>
-                <p className="text-white/60 font-mono text-sm uppercase tracking-widest">AI Command Center v1.0</p>
+                <h1 className="text-4xl font-display font-bold text-gradient mb-2 leading-tight">
+                  Automated EDA Benchmarking &amp; Evaluation
+                </h1>
+                <p className="text-white/50 font-mono text-xs uppercase tracking-[0.3em]">AI Command Center · v1.0</p>
               </div>
               <div className="flex items-center gap-4">
-                {(isLoading || isReliabilityLoading) && <Loader2 className="w-6 h-6 text-[var(--neon-green)] animate-spin" />}
-                <div className="px-4 py-2 rounded-lg backdrop-blur-sm bg-[var(--neon-green)]/20 border border-[var(--neon-green)]/30">
+                {(isLoading || isReliabilityLoading) && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg glass">
+                    <Loader2 className="w-4 h-4 text-[var(--cyber-cyan)] animate-spin" />
+                    <span className="text-xs font-mono uppercase tracking-wider shimmer">Processing</span>
+                  </div>
+                )}
+                <div className="px-4 py-2 rounded-lg backdrop-blur-sm bg-[var(--neon-green)]/15 border border-[var(--neon-green)]/30 shadow-[0_0_24px_rgba(52,211,153,0.15)]">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[var(--neon-green)] animate-pulse" />
-                    <span className="text-sm text-[var(--neon-green)] uppercase font-bold">System Online</span>
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--neon-green)] opacity-60" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--neon-green)]" />
+                    </span>
+                    <span className="text-sm text-[var(--neon-green)] uppercase font-bold tracking-wide">System Online</span>
                   </div>
                 </div>
               </div>
@@ -137,12 +150,12 @@ export default function App() {
           </motion.div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full justify-start mb-6 backdrop-blur-xl bg-white/5 border border-white/10 p-1 h-auto gap-2">
+            <TabsList className="w-full justify-start mb-6 backdrop-blur-xl bg-white/[0.04] border border-white/10 p-1.5 h-auto gap-1.5 rounded-xl">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[var(--electric-violet)] data-[state=active]:to-[var(--neon-green)] data-[state=active]:text-white px-6 py-3 rounded-lg transition-all duration-300"
+                  className="text-white/50 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[var(--electric-violet)] data-[state=active]:to-[var(--cyber-cyan)] data-[state=active]:text-white data-[state=active]:shadow-[0_4px_20px_rgba(139,92,246,0.35)] px-6 py-3 rounded-lg transition-all duration-300 hover:text-white/90"
                 >
                   <div className="flex items-center gap-2">
                     <tab.icon className="w-4 h-4" />
