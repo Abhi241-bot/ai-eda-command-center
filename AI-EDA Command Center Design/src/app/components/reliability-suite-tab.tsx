@@ -9,9 +9,15 @@ interface ReliabilitySuiteTabProps {
 }
 
 export function ReliabilitySuiteTab({ results, onRunReliability, loading }: ReliabilitySuiteTabProps) {
-  const [selectedTool, setSelectedTool] = useState("ydata-profiling");
-
-  const tools = ["ydata-profiling", "sweetviz", "autoviz", "lux"];
+  // `id` must match the backend TOOL_RUNNERS keys; `label` is display-only.
+  const tools = [
+    { id: "ydata", label: "ydata-profiling" },
+    { id: "sweetviz", label: "Sweetviz" },
+    { id: "autoviz", label: "AutoViz" },
+    { id: "lux", label: "Lux" },
+  ];
+  const [selectedTool, setSelectedTool] = useState(tools[0].id);
+  const selectedLabel = tools.find(t => t.id === selectedTool)?.label ?? selectedTool;
 
   const stressTests = [
     { name: "Missingness", icon: Droplets, color: "var(--neon-green)" },
@@ -29,15 +35,15 @@ export function ReliabilitySuiteTab({ results, onRunReliability, loading }: Reli
         <div className="flex gap-2">
           {tools.map(tool => (
             <button
-              key={tool}
-              onClick={() => setSelectedTool(tool)}
+              key={tool.id}
+              onClick={() => setSelectedTool(tool.id)}
               className={`px-4 py-2 rounded-lg text-xs font-mono transition-all uppercase ${
-                selectedTool === tool 
-                ? "bg-[var(--electric-violet)] text-white" 
+                selectedTool === tool.id
+                ? "bg-[var(--electric-violet)] text-white"
                 : "bg-white/5 text-white/40 hover:bg-white/10"
               }`}
             >
-              {tool}
+              {tool.label}
             </button>
           ))}
         </div>
@@ -60,7 +66,7 @@ export function ReliabilitySuiteTab({ results, onRunReliability, loading }: Reli
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl text-white mb-2 uppercase tracking-wide">Data Stress Testing Suite</h2>
-            <p className="text-sm text-white/60">Evaluating <span className="text-[var(--electric-violet)] font-bold">{selectedTool}</span> stability under adversarial conditions</p>
+            <p className="text-sm text-white/60">Evaluating <span className="text-[var(--electric-violet)] font-bold">{selectedLabel}</span> stability under adversarial conditions</p>
           </div>
           <div className="text-right">
             <div className="text-4xl font-mono text-[var(--neon-green)]">

@@ -15,9 +15,9 @@ const CONFIDENCE_MAP: Record<string, number> = {
 export function ToolRecommenderTab({ recommendation, scores }: ToolRecommenderTabProps) {
   if (!recommendation) {
     return (
-      <div className="max-w-4xl mx-auto p-20 flex flex-col items-center justify-center text-white/20 border border-white/5 rounded-2xl bg-white/5 gap-4">
-        <HelpCircle className="w-16 h-16 opacity-10" />
-        <p>Run analysis to see tool recommendations</p>
+      <div className="glass max-w-4xl mx-auto p-20 flex flex-col items-center justify-center text-white/30 rounded-2xl gap-4">
+        <HelpCircle className="w-16 h-16 text-[var(--cyber-cyan)]/30 animate-float" />
+        <p className="font-mono text-sm uppercase tracking-wider">Run analysis to see tool recommendations</p>
       </div>
     );
   }
@@ -32,8 +32,11 @@ export function ToolRecommenderTab({ recommendation, scores }: ToolRecommenderTa
   const avoid = recommendation.avoid;
   const winnerScore = recommendation.overall_winner_score;
 
-  // Build per-tool score rows from the scores object
-  const scoreEntries = scores?.table || Object.entries(scores?.scores || {}).map(([name, s]: [string, any]) => ({
+  // Build per-tool score rows. `scores` may arrive as a prebuilt table
+  // ({ table: [...] }), wrapped ({ scores: {...} }), or as the raw dict keyed
+  // by tool name — handle all three shapes.
+  const scoresDict = scores?.scores || (scores && !scores.table ? scores : {});
+  const scoreEntries = scores?.table || Object.entries(scoresDict).map(([name, s]: [string, any]) => ({
     Tool: name.charAt(0).toUpperCase() + name.slice(1),
     "Overall Score": s?.overall ?? 0,
     Correctness: s?.correctness ?? 0,

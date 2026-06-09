@@ -6,13 +6,11 @@ Bridges the existing Python modules to the new React frontend.
 """
 
 import os
-import time
 import shutil
 import logging
 import pandas as pd
-from pathlib import Path
-from typing import List, Dict, Any, Optional
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from typing import List, Dict, Optional
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -21,7 +19,7 @@ from modules.data_loader import get_dataset_profile, sanitize_val
 from modules.eda_runner import TOOL_RUNNERS, run_all_tools
 from modules.insight_extractor import (
     extract_ydata_insights, extract_sweetviz_insights,
-    extract_autoviz_insights, extract_lux_insights, unify_insights
+    extract_autoviz_insights, unify_insights
 )
 from modules.ai_insight_generator import generate_narrative
 from modules.gap_detector import detect_gaps
@@ -35,10 +33,19 @@ logger = logging.getLogger("server")
 
 app = FastAPI(title="AI-EDA Backend API")
 
-# Enable CORS for the React frontend (usually runs on :5173 or :3000)
+# Enable CORS for the React frontend (usually runs on :5173 or :3000).
+# Origins can be overridden via the CORS_ORIGINS env var (comma-separated).
+# Note: a wildcard origin ("*") is incompatible with allow_credentials=True
+# per the CORS spec, so credentials are only enabled for explicit origins.
+_cors_origins = [
+    o.strip() for o in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:5173,http://localhost:3000",
+    ).split(",") if o.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development; restrict in production
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -132,14 +139,19 @@ async def get_ai_insights():
     """Generate AI narrative and gaps."""
     if state.unified is None:
         raise HTTPException(status_code=400, detail="Run EDA first to generate insights")
-    
-    import os
+
     if not os.getenv("GROQ_API_KEY"):
-        return {"error": "API Key missing"}
+        # Always return the shape the frontend expects (narrative + gaps array)
+        # so the UI degrades gracefully instead of crashing.
+        return {
+            "narrative": "AI narrative unavailable: GROQ_API_KEY is not set. "
+                         "Add it to your .env file to enable AI features.",
+            "gaps": [],
+        }
 
     narrative = generate_narrative(state.profile, state.unified)
     gaps = detect_gaps(state.unified, state.profile)
-    
+
     return sanitize_val({"narrative": narrative, "gaps": gaps})
 
 @app.get("/insights/score")
@@ -182,15 +194,26 @@ async def run_reliability(req: ReliabilityRequest):
     out_base = str(config.REPORTS_DIR / "reliability")
     results = run_reliability_suite(state.df, runner, out_base, req.tool, max_rows=req.max_rows)
     summary = reliability_summary({req.tool: results})
-    
-    # Calculate a simple score (percentage of successful tests)
-    passes = sum(1 for r in results if r.get("status") == "Pass")
+    s = summary.get(req.tool, {})
+
+    # Reliability runners report "success" on a passing scenario.
+    passes = sum(1 for r in results if r.get("status") == "success")
     score = passes / len(results) if results else 0
-    
+
+    # Build a human-readable summary string for the UI (the frontend renders
+    # this as text, so we must not return the raw summary dict).
+    summary_text = (
+        f"{req.tool.capitalize()} passed {s.get('pass_count', passes)}/"
+        f"{s.get('total_scenarios', len(results))} scenarios "
+        f"({s.get('pass_rate', round(score * 100, 1))}%). "
+        f"Slowest scenario: {s.get('slowest_scenario', 'N/A')} "
+        f"({s.get('slowest_sec', 0)}s)."
+    )
+
     return {
-        "results": results, 
-        "summary": summary.get(req.tool, "No summary available"),
-        "score": score
+        "results": results,
+        "summary": summary_text,
+        "score": score,
     }
 
 @app.get("/benchmark")

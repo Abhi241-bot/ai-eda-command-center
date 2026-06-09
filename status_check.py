@@ -224,6 +224,6 @@ if failed:
             print(f"    {v[6:]}")
 else:
     if skipped:
-        print("\nAll code modules PASS. Set GEMINI_API_KEY in .env for AI features.")
+        print("\nAll code modules PASS. Set GROQ_API_KEY in .env for AI features.")
     else:
         print("\nAll features PASS including AI. Project is fully operational.")
