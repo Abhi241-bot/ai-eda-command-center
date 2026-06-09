@@ -38,6 +38,28 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
+> **Two interfaces, one engine.** The same Python `modules/` power **two**
+> front-ends: the **React + FastAPI** Command Center (primary, shown above) and
+> a self-contained **Streamlit** dashboard (`app.py`) for a zero-frontend-build
+> alternative. Pick whichever fits your demo.
+
+---
+
+## 📸 Screenshots
+
+> Run the app (see Quick Start) and drop captures into `docs/screenshots/`,
+> then reference them here, e.g.:
+
+```markdown
+![Data Hub](docs/screenshots/data-hub.png)
+![Insights Audit](docs/screenshots/insights.png)
+![Benchmarking Radar](docs/screenshots/benchmarking.png)
+```
+
+| Data Hub | Insights Audit | Benchmarking |
+|----------|----------------|--------------|
+| _profiling + live preview_ | _AI narrative + gap detection_ | _multi-metric radar + leaderboard_ |
+
 ---
 
 ## ✨ Features
@@ -56,7 +78,8 @@
 
 ```
 Automated EDA/
-├── server.py                        # FastAPI REST API (main backend)
+├── server.py                        # FastAPI REST API (primary backend)
+├── app.py                           # Streamlit dashboard (alternative all-in-one UI)
 ├── config.py                        # Global settings, Groq config
 ├── requirements.txt
 ├── .env.example                     # API key template
@@ -154,6 +177,20 @@ Navigate to **http://localhost:5173** and start uploading your CSV files!
 
 ---
 
+## 🪄 Alternative: one-command Streamlit UI
+
+Prefer not to run a separate Node frontend? The Streamlit dashboard bundles the
+entire pipeline (upload → EDA → AI analysis → benchmarking → reliability) into a
+single Python app:
+
+```bash
+streamlit run app.py
+```
+Opens at **http://localhost:8501**. Uses the same `modules/` and the same
+`GROQ_API_KEY`, so no extra setup is needed.
+
+---
+
 ## 🔑 Environment Variables
 
 | Variable | Required | Description |
@@ -237,7 +274,9 @@ summary = reliability_summary({tool_name: results})
 
 - **Lux** requires a Jupyter kernel and is disabled by default. Enable in `config.py` if needed.
 - **AutoViz** uses matplotlib's non-interactive `Agg` backend and saves charts to `reports/autoviz/`.
-- The backend holds state in memory per-session. Restart the server to reset the analysis state.
+- The FastAPI backend keeps analysis state in memory as a single shared session
+  (great for a local demo; not designed for concurrent multi-user use). Restart
+  the server to reset.
 - NumPy 2.x compatibility patch is applied automatically in `eda_runner.py` for Sweetviz support.
 
 ---
@@ -246,7 +285,9 @@ summary = reliability_summary({tool_name: results})
 
 **Backend:** Python · FastAPI · Uvicorn · Pandas · ydata-profiling · Sweetviz · AutoViz · Groq SDK
 
-**Frontend:** React · Vite · TypeScript · Framer Motion · Recharts · Lucide Icons · Tailwind CSS
+**Frontend:** React · Vite · TypeScript · Motion · Recharts · Lucide Icons · Tailwind CSS v4
+
+**Alternative UI:** Streamlit · Plotly
 
 **AI:** Groq API (`llama-3.3-70b-versatile`) — sub-second inference, no rate limits on free tier
 
